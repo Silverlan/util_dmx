@@ -297,7 +297,7 @@ static std::vector<dmx::AttrType> s_v3Attributes = {
 dmx::AttrType dmx::get_id_type(const std::string &encoding,uint32_t encodingVersion,uint32_t id)
 {
 	if(encoding != "binary" && encoding != "binary_proto")
-		throw std::exception("");
+		throw std::runtime_error("Unsupported encoding.");
 	if(encodingVersion == 1 || encodingVersion == 2)
 		return s_v1Attributes.at(id);
 	else if(encodingVersion >= 3 && encodingVersion <= 5)
@@ -305,7 +305,7 @@ dmx::AttrType dmx::get_id_type(const std::string &encoding,uint32_t encodingVers
 	else if(encodingVersion == 9)
 	{
 		if(id >= 32)
-			throw std::exception("");
+			throw std::runtime_error("Unsupported encoding version.");
 		return s_v3Attributes.at(id);
 	}
 	return dmx::AttrType::None;
@@ -483,5 +483,4 @@ std::shared_ptr<dmx::FileData> dmx::FileData::Load(std::shared_ptr<VFilePtrInter
 	}
 	return fd;
 }
-
 const std::vector<std::shared_ptr<dmx::Element>> &dmx::FileData::GetElements() const {return m_elements;}
