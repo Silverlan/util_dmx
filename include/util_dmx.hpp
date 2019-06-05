@@ -9,7 +9,9 @@
 #include <string>
 #include <vector>
 #include <array>
+#include <sstream>
 #include <unordered_map>
+#include <unordered_set>
 
 class VFilePtrInternal;
 namespace dmx
@@ -58,17 +60,31 @@ namespace dmx
 
 		Invalid = std::numeric_limits<uint32_t>::max()
 	};
+
+	struct Element;
 	struct Attribute
 	{
 		AttrType type = AttrType::Invalid;
 		std::shared_ptr<void> data = nullptr;
+
+		std::shared_ptr<Element> Get(const std::string &name) const;
+		std::string DataToString() const;
+		void DebugPrint(std::stringstream &ss);
+		void DebugPrint(std::stringstream &ss,std::unordered_set<void*> &iteratedObjects,const std::string &t0="",const std::string &t="");
 	};
 	struct Element
+		: public std::enable_shared_from_this<Element>
 	{
 		std::string type;
 		std::string name;
 		std::array<char,16> GUID;
 		std::unordered_map<std::string,std::shared_ptr<dmx::Attribute>> attributes;
+		std::unordered_map<std::string,std::weak_ptr<Element>> nameToChildElement;
+
+		std::shared_ptr<Element> Get(const std::string &name) const;
+		std::shared_ptr<Attribute> GetAttr(const std::string &name) const;
+		void DebugPrint(std::stringstream &ss);
+		void DebugPrint(std::stringstream &ss,std::unordered_set<void*> &iteratedObjects,const std::string &t="");
 	};
 	class FileData
 	{
@@ -76,10 +92,16 @@ namespace dmx
 		static std::shared_ptr<FileData> Load(std::shared_ptr<VFilePtrInternal> &f);
 
 		const std::vector<std::shared_ptr<Element>> &GetElements() const;
+		const std::shared_ptr<Attribute> &GetRootAttribute() const;
+		void DebugPrint(std::stringstream &ss);
 	private:
 		FileData()=default;
+		static std::shared_ptr<FileData> CreateFromKeyValues2Data(const void *kv2Data);
+		void UpdateRootElement();
+		void UpdateChildElementLookupTables();
 
-		std::vector<std::shared_ptr<Element>> m_elements;
+		std::shared_ptr<Attribute> m_rootAttribute = nullptr;
+		std::vector<std::shared_ptr<Element>> m_elements = {};
 	};
 	std::string type_to_string(AttrType type);
 	bool is_single_type(AttrType type);
