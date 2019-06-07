@@ -8,6 +8,7 @@
 #include <mathutil/uvec.h>
 #include <sharedutils/util.h>
 #include <sharedutils/util_string.h>
+#include <cstring>
 
 #pragma optimize("",off)
 class KV2ToDMXConverter
