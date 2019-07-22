@@ -839,6 +839,8 @@ void dmx::FileData::UpdateChildElementLookupTables()
 		auto &children = *static_cast<std::vector<std::shared_ptr<dmx::Attribute>>*>(attr.data.get());
 		for(auto &child : children)
 		{
+			if(child->data == nullptr)
+				continue; // Child points to non-existing element? This shouldn't happen!
 			if(child->type != dmx::AttrType::Element)
 				throw std::logic_error{"Object of non-Element type is member of Element array!"};
 			auto &elRef = *static_cast<const dmx::ElementRef*>(child->data.get());
@@ -899,6 +901,8 @@ void dmx::FileData::UpdateRootElement()
 					auto &children = *static_cast<std::vector<std::shared_ptr<dmx::Attribute>>*>(attr.data.get());
 					for(auto &child : children)
 					{
+						if(child->data == nullptr)
+							continue; // Child in array points to non-existing element? This shouldn't happen!
 						if(child->type != dmx::AttrType::Element)
 							throw std::logic_error{"Object of non-Element type is member of Element array!"};
 						auto &elRef = *static_cast<const dmx::ElementRef*>(child->data.get());
