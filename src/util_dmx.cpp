@@ -531,6 +531,8 @@ void dmx::Attribute::DebugPrint(std::stringstream &ss,std::unordered_set<void*> 
 	if(iteratedObjects.find(this) != iteratedObjects.end())
 		return;
 	iteratedObjects.insert(this);
+	if(data == nullptr)
+		return;
 	if(type == AttrType::ElementArray)
 	{
 		auto &childElements = *static_cast<std::vector<std::shared_ptr<dmx::Attribute>>*>(data.get());
@@ -559,6 +561,27 @@ void dmx::Attribute::DebugPrint(std::stringstream &ss,std::unordered_set<void*> 
 		return;
 	ss<<'\n';
 	elRef.lock()->DebugPrint(ss,iteratedObjects,t +'\t');
+}
+
+std::string dmx::Element::GetGUIDAsString() const
+{
+	// Source: https://github.com/graeme-hill/crossguid/blob/master/src/guid.cpp
+	char one[10], two[6], three[6], four[6], five[14];
+
+	snprintf(one, 10, "%02x%02x%02x%02x",GUID[0], GUID[1], GUID[2], GUID[3]);
+	snprintf(two, 6, "%02x%02x",GUID[4], GUID[5]);
+	snprintf(three, 6, "%02x%02x",GUID[6], GUID[7]);
+	snprintf(four, 6, "%02x%02x",GUID[8], GUID[9]);
+	snprintf(five, 14, "%02x%02x%02x%02x%02x%02x",GUID[10], GUID[11], GUID[12], GUID[13], GUID[14], GUID[15]);
+	const std::string sep("-");
+	std::string out(one);
+
+	out += sep + two;
+	out += sep + three;
+	out += sep + four;
+	out += sep + five;
+
+	return out;
 }
 
 std::shared_ptr<dmx::Element> dmx::Element::Get(const std::string &name) const
@@ -686,7 +709,7 @@ std::shared_ptr<dmx::FileData> dmx::FileData::Load(std::shared_ptr<VFilePtrInter
 	auto fd = std::shared_ptr<FileData>(new FileData());
 
 	auto numElements = f->Read<int32_t>();
-	fd->m_elements.reserve(numElements);
+	fd->m_elements.reserve(numElements *1.05); // Reserve 5% extra for potential missing elements, which will be added to the container dynamically
 	std::vector<std::shared_ptr<dmx::Element>> elements {}; // Temporary container which owns all elements; Will be discarded once elements have been assigned to their attributes
 	elements.reserve(numElements);
 	for(auto i=decltype(numElements){0};i<numElements;++i)
@@ -695,7 +718,7 @@ std::shared_ptr<dmx::FileData> dmx::FileData::Load(std::shared_ptr<VFilePtrInter
 		auto &el = elements.back();
 		el->type = dictionary.ReadString();
 		el->name = (encodingVersion >= 4) ? dictionary.ReadString() : dictionary.GetString();
-		el->GUID = f->Read<std::array<char,16>>();
+		el->GUID = f->Read<std::array<uint8_t,16>>();
 		fd->m_elements.push_back(el);
 	}
 
@@ -711,6 +734,8 @@ std::shared_ptr<dmx::FileData> dmx::FileData::Load(std::shared_ptr<VFilePtrInter
 					return attr;
 				else if(elIdx == -2)
 				{
+					if(elements.capacity() == elements.size())
+						elements.reserve(elements.size() +100); // Reserve for potential future missing elements
 					elements.push_back(std::make_shared<Element>());
 					auto &el = elements.back();
 					auto id = f->ReadString();
@@ -799,7 +824,9 @@ std::shared_ptr<dmx::FileData> dmx::FileData::Load(std::shared_ptr<VFilePtrInter
 		return attr;
 	};
 
-	for(auto i=decltype(fd->m_elements.size()){0};i<fd->m_elements.size();++i)
+	// Note: We have to use numElements instead of fd->m_elements.size(), because the container size
+	// can change due to missing elements that are added dynamically
+	for(auto i=decltype(numElements){0};i<numElements;++i)
 	{
 		auto &el = *fd->m_elements.at(i);
 		auto numAttributes = f->Read<int32_t>();
@@ -875,7 +902,9 @@ void dmx::FileData::UpdateChildElementLookupTables()
 			}
 		}
 	};
-	fIterateAttributeChildren(*m_rootAttribute);
+	auto elRoot = std::static_pointer_cast<dmx::ElementRef>(m_rootAttribute->data);
+	if(elRoot && elRoot->expired() == false)
+		fIterateChildren(*elRoot->lock());
 }
 void dmx::FileData::UpdateRootElement()
 {
@@ -916,21 +945,11 @@ void dmx::FileData::UpdateRootElement()
 	};
 	for(auto &el : m_elements)
 		fIterateChildren(*el);
-	auto rootElements = std::make_shared<std::vector<std::shared_ptr<dmx::Attribute>>>();
-	m_rootAttribute = std::make_shared<Attribute>();
-	m_rootAttribute->type = AttrType::ElementArray;
-	m_rootAttribute->data = rootElements;
 
-	for(auto &el : m_elements)
-	{
-		auto it = nestedElements.find(el.get());
-		if(it != nestedElements.end())
-			continue;
-		auto attr = std::make_shared<Attribute>();
-		attr->type = AttrType::Element;
-		attr->data = std::make_shared<dmx::ElementRef>(el);
-		rootElements->push_back(attr);
-	}
+	auto attr = std::make_shared<Attribute>();
+	attr->type = AttrType::Element;
+	attr->data = (m_elements.empty() == false) ? std::make_shared<dmx::ElementRef>(m_elements.front()) : nullptr;
+	m_rootAttribute = attr;
 }
 const std::vector<std::shared_ptr<dmx::Element>> &dmx::FileData::GetElements() const {return m_elements;}
 const std::shared_ptr<dmx::Attribute> &dmx::FileData::GetRootAttribute() const {return m_rootAttribute;}

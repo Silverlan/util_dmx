@@ -77,10 +77,11 @@ namespace dmx
 	{
 		std::string type;
 		std::string name;
-		std::array<char,16> GUID;
+		std::array<uint8_t,16> GUID;
 		std::unordered_map<std::string,std::shared_ptr<dmx::Attribute>> attributes;
 		std::unordered_map<std::string,std::weak_ptr<Element>> nameToChildElement;
 
+		std::string GetGUIDAsString() const;
 		std::shared_ptr<Element> Get(const std::string &name) const;
 		std::shared_ptr<Attribute> GetAttr(const std::string &name) const;
 		void DebugPrint(std::stringstream &ss);
