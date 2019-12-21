@@ -12,6 +12,7 @@
 #include <sstream>
 #include <unordered_map>
 #include <unordered_set>
+#include "util_dmx_types.hpp"
 
 class VFilePtrInternal;
 namespace dmx
@@ -71,6 +72,30 @@ namespace dmx
 		std::string DataToString() const;
 		void DebugPrint(std::stringstream &ss);
 		void DebugPrint(std::stringstream &ss,std::unordered_set<void*> &iteratedObjects,const std::string &t0="",const std::string &t="");
+
+		template<typename T>
+			T *GetValue(AttrType type)
+		{
+			return (this->type == type) ? static_cast<T*>(data.get()) : nullptr;
+		}
+		ElementRef *GetElement();
+		Int *GetInt();
+		Float *GetFloat();
+		Bool *GetBoolean();
+		String *GetString();
+		Binary *GetBinary();
+		Time *GetTime();
+		Color *GetColor();
+		Vector2 *GetVector2();
+		Vector3 *GetVector3();
+		Vector4 *GetVector4();
+		Angle *GetAngle();
+		Quaternion *GetQuaternion();
+		Matrix *GetMatrix();
+		UInt64 *GetUInt64();
+		UInt8 *GetUInt8();
+		std::vector<std::shared_ptr<dmx::Attribute>> *GetArray();
+		std::vector<std::shared_ptr<dmx::Attribute>> *GetArray(AttrType type);
 	};
 	struct Element
 		: public std::enable_shared_from_this<Element>

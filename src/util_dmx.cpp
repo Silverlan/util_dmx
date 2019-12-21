@@ -61,7 +61,7 @@ namespace dmx
 				if(encodingVersion == 4u)
 					m_indexSize = sizeof(int16_t);
 				else if(encodingVersion == 2u || encodingVersion == 3u)
-					m_lengthSize = m_lengthSize = sizeof(int16_t);
+					m_lengthSize = m_indexSize = sizeof(int16_t);
 				else if(encodingVersion == 1u)
 				{
 					m_bDummy = true;
@@ -519,7 +519,32 @@ std::string dmx::Attribute::DataToString() const
 			return "Unknown";
 	}
 }
-
+dmx::ElementRef *dmx::Attribute::GetElement() {return GetValue<ElementRef>(AttrType::Element);}
+dmx::Int *dmx::Attribute::GetInt() {return GetValue<Int>(AttrType::Int);}
+dmx::Float *dmx::Attribute::GetFloat() {return GetValue<Float>(AttrType::Float);}
+dmx::Bool *dmx::Attribute::GetBoolean() {return GetValue<Bool>(AttrType::Bool);}
+dmx::String *dmx::Attribute::GetString() {return GetValue<String>(AttrType::String);}
+dmx::Binary *dmx::Attribute::GetBinary() {return GetValue<Binary>(AttrType::Binary);}
+dmx::Time *dmx::Attribute::GetTime() {return GetValue<Time>(AttrType::Time);}
+dmx::Color *dmx::Attribute::GetColor() {return GetValue<Color>(AttrType::Color);}
+dmx::Vector2 *dmx::Attribute::GetVector2() {return GetValue<Vector2>(AttrType::Vector2);}
+dmx::Vector3 *dmx::Attribute::GetVector3() {return GetValue<Vector3>(AttrType::Vector3);}
+dmx::Vector4 *dmx::Attribute::GetVector4() {return GetValue<Vector4>(AttrType::Vector4);}
+dmx::Angle *dmx::Attribute::GetAngle() {return GetValue<Angle>(AttrType::Angle);}
+dmx::Quaternion *dmx::Attribute::GetQuaternion() {return GetValue<Quaternion>(AttrType::Quaternion);}
+dmx::Matrix *dmx::Attribute::GetMatrix() {return GetValue<Matrix>(AttrType::Matrix);}
+dmx::UInt64 *dmx::Attribute::GetUInt64() {return GetValue<UInt64>(AttrType::UInt64);}
+dmx::UInt8 *dmx::Attribute::GetUInt8() {return GetValue<UInt8>(AttrType::UInt8);}
+std::vector<std::shared_ptr<dmx::Attribute>> *dmx::Attribute::GetArray()
+{
+	return is_array_type(type) ? GetValue<std::vector<std::shared_ptr<dmx::Attribute>>>(AttrType::ElementArray) : nullptr;
+}
+std::vector<std::shared_ptr<dmx::Attribute>> *dmx::Attribute::GetArray(AttrType type)
+{
+	if(this->type != type)
+		return nullptr;
+	return is_array_type(type) ? GetValue<std::vector<std::shared_ptr<dmx::Attribute>>>(AttrType::ElementArray) : nullptr;
+}
 void dmx::Attribute::DebugPrint(std::stringstream &ss)
 {
 	std::unordered_set<void*> iteratedObjects {};
