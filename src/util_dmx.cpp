@@ -588,26 +588,7 @@ void dmx::Attribute::DebugPrint(std::stringstream &ss,std::unordered_set<void*> 
 	elRef.lock()->DebugPrint(ss,iteratedObjects,t +'\t');
 }
 
-std::string dmx::Element::GetGUIDAsString() const
-{
-	// Source: https://github.com/graeme-hill/crossguid/blob/master/src/guid.cpp
-	char one[10], two[6], three[6], four[6], five[14];
-
-	snprintf(one, 10, "%02x%02x%02x%02x",GUID[0], GUID[1], GUID[2], GUID[3]);
-	snprintf(two, 6, "%02x%02x",GUID[4], GUID[5]);
-	snprintf(three, 6, "%02x%02x",GUID[6], GUID[7]);
-	snprintf(four, 6, "%02x%02x",GUID[8], GUID[9]);
-	snprintf(five, 14, "%02x%02x%02x%02x%02x%02x",GUID[10], GUID[11], GUID[12], GUID[13], GUID[14], GUID[15]);
-	const std::string sep("-");
-	std::string out(one);
-
-	out += sep + two;
-	out += sep + three;
-	out += sep + four;
-	out += sep + five;
-
-	return out;
-}
+std::string dmx::Element::GetGUIDAsString() const {return util::guid_to_string(GUID);}
 
 std::shared_ptr<dmx::Element> dmx::Element::Get(const std::string &name) const
 {
