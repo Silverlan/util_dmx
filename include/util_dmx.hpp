@@ -15,6 +15,7 @@
 #include "util_dmx_types.hpp"
 
 class VFilePtrInternal;
+namespace util {using GUID = std::array<uint8_t,16>;};
 namespace dmx
 {
 	enum class AttrType : uint32_t
