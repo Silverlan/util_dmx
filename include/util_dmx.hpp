@@ -20,10 +20,9 @@ namespace dmx
 {
 	enum class AttrType : uint32_t
 	{
-		SingleFirst = 0,
-
-		None = SingleFirst,
-		Element,
+		None = 0,
+		SingleFirst,
+		Element = SingleFirst,
 		Int,
 		Float,
 		Bool,
@@ -65,6 +64,7 @@ namespace dmx
 
 	struct Element;
 	struct Attribute
+		: public std::enable_shared_from_this<Attribute>
 	{
 		AttrType type = AttrType::Invalid;
 		std::shared_ptr<void> data = nullptr;
@@ -97,6 +97,9 @@ namespace dmx
 		UInt8 *GetUInt8();
 		std::vector<std::shared_ptr<dmx::Attribute>> *GetArray();
 		std::vector<std::shared_ptr<dmx::Attribute>> *GetArray(AttrType type);
+		void RemoveArrayValue(uint32_t idx);
+		void RemoveArrayValue(dmx::Attribute &attr);
+		void AddArrayValue(dmx::Attribute &attr);
 	};
 	struct Element
 		: public std::enable_shared_from_this<Element>
@@ -134,6 +137,7 @@ namespace dmx
 	bool is_single_type(AttrType type);
 	bool is_array_type(AttrType type);
 	AttrType get_single_type(AttrType type);
+	AttrType get_array_type(AttrType type);
 };
 
 #endif

@@ -174,6 +174,45 @@ std::string dmx::type_to_string(AttrType type)
 }
 bool dmx::is_single_type(AttrType type) {return type >= AttrType::SingleFirst && type <= AttrType::SingleLast;}
 bool dmx::is_array_type(AttrType type) {return type >= AttrType::ArrayFirst && type <= AttrType::ArrayLast;}
+dmx::AttrType dmx::get_array_type(AttrType type)
+{
+	if(is_array_type(type))
+		return type;
+	switch(type)
+	{
+	case AttrType::Element:
+		return AttrType::ElementArray;
+	case AttrType::Int:
+		return AttrType::IntArray;
+	case AttrType::Float:
+		return AttrType::FloatArray;
+	case AttrType::Bool:
+		return AttrType::BoolArray;
+	case AttrType::String:
+		return AttrType::StringArray;
+	case AttrType::Binary:
+		return AttrType::BinaryArray;
+	case AttrType::Time:
+		return AttrType::TimeArray;
+	case AttrType::ObjectId:
+		return AttrType::ObjectIdArray;
+	case AttrType::Color:
+		return AttrType::ColorArray;
+	case AttrType::Vector2:
+		return AttrType::Vector2Array;
+	case AttrType::Vector3:
+		return AttrType::Vector3Array;
+	case AttrType::Vector4:
+		return AttrType::Vector4Array;
+	case AttrType::Angle:
+		return AttrType::AngleArray;
+	case AttrType::Quaternion:
+		return AttrType::QuaternionArray;
+	case AttrType::Matrix:
+		return AttrType::MatrixArray;
+	}
+	return AttrType::None;
+}
 dmx::AttrType dmx::get_single_type(AttrType type)
 {
 	if(type <= AttrType::SingleLast)
@@ -544,6 +583,39 @@ std::vector<std::shared_ptr<dmx::Attribute>> *dmx::Attribute::GetArray(AttrType 
 	if(this->type != type)
 		return nullptr;
 	return is_array_type(type) ? GetValue<std::vector<std::shared_ptr<dmx::Attribute>>>(AttrType::ElementArray) : nullptr;
+}
+void dmx::Attribute::RemoveArrayValue(uint32_t idx)
+{
+	auto *a = GetArray();
+	if(a == nullptr || idx >= a->size())
+		return;
+	a->erase(a->begin() +idx);
+}
+void dmx::Attribute::RemoveArrayValue(dmx::Attribute &attr)
+{
+	auto *a = GetArray();
+	if(a == nullptr)
+		return;
+	auto it = std::find_if(a->begin(),a->end(),[&attr](const std::shared_ptr<dmx::Attribute> &attrOther) {
+		return attrOther.get() == &attr;
+	});
+	if(it == a->end())
+		return;
+	RemoveArrayValue(it -a->begin());
+}
+void dmx::Attribute::AddArrayValue(dmx::Attribute &attr)
+{
+	if(get_array_type(attr.type) != type)
+		return;
+	auto *a = GetArray();
+	if(a == nullptr)
+		return;
+	auto it = std::find_if(a->begin(),a->end(),[&attr](const std::shared_ptr<dmx::Attribute> &attrOther) {
+		return attrOther.get() == &attr;
+	});
+	if(it != a->end())
+		return;
+	a->push_back(attr.shared_from_this());
 }
 void dmx::Attribute::DebugPrint(std::stringstream &ss)
 {
