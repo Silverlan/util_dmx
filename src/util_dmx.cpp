@@ -637,7 +637,7 @@ void dmx::Attribute::DebugPrint(std::stringstream &ss,std::unordered_set<void*> 
 		auto tsubEl = tsub +'\t';
 		for(auto &elAttr : childElements)
 		{
-			assert(elAttr->tpe == AttrType::Element);
+			assert(elAttr->type == AttrType::Element);
 			if(elAttr->type != AttrType::Element)
 				continue; // This should never happen!
 			ss<<'\n';
