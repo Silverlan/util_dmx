@@ -8,6 +8,7 @@
 #include <fsys/filesystem.h>
 #include <sharedutils/util_string.h>
 #include <sharedutils/util.h>
+#include <sharedutils/util_ifile.hpp>
 #include <mathutil/uvec.h>
 #include <mathutil/uquat.h>
 #include <unordered_set>
@@ -52,7 +53,7 @@ namespace dmx
 	class StringDictionary
 	{
 	public:
-		StringDictionary(VFilePtr &f,const std::string &encoding,uint32_t encodingVersion)
+		StringDictionary(const std::shared_ptr<ufile::IFile> &f,const std::string &encoding,uint32_t encodingVersion)
 			: m_file(f)
 		{
 			if(encoding == "binary")
@@ -89,7 +90,7 @@ namespace dmx
 			return m_file->ReadString();
 		}
 	private:
-		VFilePtr m_file = nullptr;
+		std::shared_ptr<ufile::IFile> m_file = nullptr;
 		std::vector<std::string> m_strings;
 		uint32_t m_indexSize = 0u;
 		uint32_t m_lengthSize = 0u;
@@ -702,7 +703,7 @@ void dmx::Element::DebugPrint(std::stringstream &ss,std::unordered_set<void*> &i
 	}
 }
 
-std::shared_ptr<dmx::FileData> dmx::FileData::Load(std::shared_ptr<VFilePtrInternal> &f)
+std::shared_ptr<dmx::FileData> dmx::FileData::Load(const std::shared_ptr<ufile::IFile> &f)
 {
 	auto dmxHeader = dmx::BinaryDMX_v5{};
 	const char *headerEnd = "-->";

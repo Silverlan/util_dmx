@@ -4,6 +4,7 @@
 
 #include "dmx_keyvalues2.hpp"
 #include <array>
+#include <sharedutils/util_ifile.hpp>
 
 using namespace dmx;
 
@@ -50,12 +51,12 @@ void KeyValues2::Array::ToString(std::stringstream &outStream,const std::string 
 }
 KeyValues2::BaseElement::Type KeyValues2::Array::GetType() const {return Type::Array;}
 
-KeyValues2::Result KeyValues2::Load(const VFilePtr &f,std::shared_ptr<Array> &outArray)
+KeyValues2::Result KeyValues2::Load(const std::shared_ptr<ufile::IFile> &f,std::shared_ptr<Array> &outArray)
 {
 	KeyValues2 dmxKv2 {f};
 	return dmxKv2.Read(outArray);
 }
-KeyValues2::KeyValues2(const VFilePtr &f)
+KeyValues2::KeyValues2(const std::shared_ptr<ufile::IFile> &f)
 	: m_file{f}
 {}
 KeyValues2::Result KeyValues2::Read(std::shared_ptr<Array> &outArray)

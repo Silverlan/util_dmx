@@ -14,6 +14,8 @@
 #include <unordered_set>
 #include "util_dmx_types.hpp"
 
+namespace ufile {struct IFile;};
+
 class VFilePtrInternal;
 namespace util {using GUID = std::array<uint8_t,16>;};
 namespace dmx
@@ -119,7 +121,7 @@ namespace dmx
 	class FileData
 	{
 	public:
-		static std::shared_ptr<FileData> Load(std::shared_ptr<VFilePtrInternal> &f);
+		static std::shared_ptr<FileData> Load(const std::shared_ptr<ufile::IFile> &f);
 
 		const std::vector<std::shared_ptr<Element>> &GetElements() const;
 		const std::shared_ptr<Attribute> &GetRootAttribute() const;

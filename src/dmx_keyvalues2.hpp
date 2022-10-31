@@ -13,6 +13,8 @@
 #include <sstream>
 #include <fsys/filesystem.h>
 
+namespace ufile {struct IFile;};
+
 namespace dmx
 {
 	class KeyValues2
@@ -25,7 +27,7 @@ namespace dmx
 			InvalidFormat
 		};
 		struct Array;
-		static Result Load(const VFilePtr &f,std::shared_ptr<Array> &outArray);
+		static Result Load(const std::shared_ptr<ufile::IFile> &f,std::shared_ptr<Array> &outArray);
 		struct BaseElement
 		{
 			enum class Type : uint32_t
@@ -87,7 +89,7 @@ namespace dmx
 
 		uint32_t GetErrorLine() const;
 	private:
-		KeyValues2(const VFilePtr &f);
+		KeyValues2(const std::shared_ptr<ufile::IFile> &f);
 		Result Read(std::shared_ptr<Array> &outArray);
 		constexpr bool IsWhitespace(char c) const;
 		constexpr bool IsControlCharacter(char c) const;
@@ -101,7 +103,7 @@ namespace dmx
 		Result ReadArrayBody(Array &a,bool root=false);
 		Result ReadElementItem(Element &e);
 		Result ReadElementBody(Element &e);
-		VFilePtr m_file;
+		std::shared_ptr<ufile::IFile> m_file;
 		uint32_t m_curLine = 0;
 	};
 };
