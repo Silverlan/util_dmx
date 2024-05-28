@@ -12,10 +12,7 @@
 #include <mathutil/uvec.h>
 #include <mathutil/uquat.h>
 #include <unordered_set>
-
-#pragma comment(lib,"sharedutils.lib")
-#pragma comment(lib,"mathutil.lib")
-#pragma comment(lib,"vfilesystem.lib")
+#include <cassert>
 
 #pragma optimize("",off)
 namespace dmx
