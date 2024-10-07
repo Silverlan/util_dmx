@@ -14,8 +14,7 @@
 #include <mathutil/uvec.h>
 #include <mathutil/umat.h>
 
-namespace dmx
-{
+namespace source_engine::dmx {
 	struct Element;
 	using ElementRef = std::weak_ptr<Element>;
 	using Int = int32_t;
@@ -25,7 +24,7 @@ namespace dmx
 	using Binary = std::vector<uint8_t>;
 	using Time = float;
 	// using ObjectId = ;
-	using Color = std::array<uint8_t,4>;
+	using Color = std::array<uint8_t, 4>;
 	using Vector2 = ::Vector2;
 	using Vector3 = ::Vector3;
 	using Vector4 = ::Vector4;

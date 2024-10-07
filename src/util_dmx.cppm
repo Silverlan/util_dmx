@@ -2,8 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef __UTIL_DMX_HPP__
-#define __UTIL_DMX_HPP__
+module;
 
 #include <memory>
 #include <string>
@@ -12,16 +11,15 @@
 #include <sstream>
 #include <unordered_map>
 #include <unordered_set>
-#include "util_dmx_types.hpp"
+#include "dmx_types.hpp"
+#include "definitions.hpp"
 
-namespace ufile {struct IFile;};
+export module source_engine.dmx;
 
-class VFilePtrInternal;
-namespace util {using GUID = std::array<uint8_t,16>;};
-namespace dmx
-{
-	enum class AttrType : uint32_t
-	{
+export import :keyvalues2;
+
+export namespace source_engine::dmx {
+	enum class AttrType : uint32_t {
 		None = 0,
 		SingleFirst,
 		Element = SingleFirst,
@@ -65,21 +63,19 @@ namespace dmx
 	};
 
 	struct Element;
-	struct Attribute
-		: public std::enable_shared_from_this<Attribute>
-	{
+	struct Attribute : public std::enable_shared_from_this<Attribute> {
 		AttrType type = AttrType::Invalid;
 		std::shared_ptr<void> data = nullptr;
 
 		std::shared_ptr<Element> Get(const std::string &name) const;
 		std::string DataToString() const;
 		void DebugPrint(std::stringstream &ss);
-		void DebugPrint(std::stringstream &ss,std::unordered_set<void*> &iteratedObjects,const std::string &t0="",const std::string &t="");
+		void DebugPrint(std::stringstream &ss, std::unordered_set<void *> &iteratedObjects, const std::string &t0 = "", const std::string &t = "");
 
 		template<typename T>
-			T *GetValue(AttrType type)
+		T *GetValue(AttrType type)
 		{
-			return (this->type == type) ? static_cast<T*>(data.get()) : nullptr;
+			return (this->type == type) ? static_cast<T *>(data.get()) : nullptr;
 		}
 		ElementRef *GetElement();
 		Int *GetInt();
@@ -103,31 +99,28 @@ namespace dmx
 		void RemoveArrayValue(dmx::Attribute &attr);
 		void AddArrayValue(dmx::Attribute &attr);
 	};
-	struct Element
-		: public std::enable_shared_from_this<Element>
-	{
+	struct Element : public std::enable_shared_from_this<Element> {
 		std::string type;
 		std::string name;
 		util::GUID GUID;
-		std::unordered_map<std::string,std::shared_ptr<dmx::Attribute>> attributes;
-		std::unordered_map<std::string,std::weak_ptr<Element>> nameToChildElement;
+		std::unordered_map<std::string, std::shared_ptr<dmx::Attribute>> attributes;
+		std::unordered_map<std::string, std::weak_ptr<Element>> nameToChildElement;
 
 		std::string GetGUIDAsString() const;
 		std::shared_ptr<Element> Get(const std::string &name) const;
 		std::shared_ptr<Attribute> GetAttr(const std::string &name) const;
 		void DebugPrint(std::stringstream &ss);
-		void DebugPrint(std::stringstream &ss,std::unordered_set<void*> &iteratedObjects,const std::string &t="");
+		void DebugPrint(std::stringstream &ss, std::unordered_set<void *> &iteratedObjects, const std::string &t = "");
 	};
-	class FileData
-	{
-	public:
+	class FileData {
+	  public:
 		static std::shared_ptr<FileData> Load(const std::shared_ptr<ufile::IFile> &f);
 
 		const std::vector<std::shared_ptr<Element>> &GetElements() const;
 		const std::shared_ptr<Attribute> &GetRootAttribute() const;
 		void DebugPrint(std::stringstream &ss);
-	private:
-		FileData()=default;
+	  private:
+		FileData() = default;
 		static std::shared_ptr<FileData> CreateFromKeyValues2Data(const void *kv2Data);
 		void UpdateRootElement();
 		void UpdateChildElementLookupTables();
@@ -141,5 +134,3 @@ namespace dmx
 	AttrType get_single_type(AttrType type);
 	AttrType get_array_type(AttrType type);
 };
-
-#endif
