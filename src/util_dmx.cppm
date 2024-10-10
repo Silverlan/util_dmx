@@ -63,6 +63,8 @@ export namespace source_engine::dmx {
 	};
 
 	struct Element;
+	using ElementRef = std::weak_ptr<Element>;
+	using ElementRefArray = std::vector<ElementRef>;
 	struct Attribute : public std::enable_shared_from_this<Attribute> {
 		AttrType type = AttrType::Invalid;
 		std::shared_ptr<void> data = nullptr;
@@ -133,4 +135,8 @@ export namespace source_engine::dmx {
 	bool is_array_type(AttrType type);
 	AttrType get_single_type(AttrType type);
 	AttrType get_array_type(AttrType type);
+
+	Time get_time(const std::string &value);
+	Time get_time(int32_t value);
+	Quat get_quaternion(const std::string &value);
 };

@@ -15,8 +15,6 @@
 #include <mathutil/umat.h>
 
 namespace source_engine::dmx {
-	struct Element;
-	using ElementRef = std::weak_ptr<Element>;
 	using Int = int32_t;
 	using Float = float;
 	using Bool = bool;
@@ -34,7 +32,6 @@ namespace source_engine::dmx {
 	using UInt64 = uint64_t;
 	using UInt8 = uint8_t;
 
-	using ElementRefArray = std::vector<ElementRef>;
 	using IntArray = std::vector<Int>;
 	using FloatArray = std::vector<Float>;
 	using BoolArray = std::vector<Bool>;
@@ -49,10 +46,6 @@ namespace source_engine::dmx {
 	using AngleArray = std::vector<Angle>;
 	using QuaternionArray = std::vector<Quaternion>;
 	using MatrixArray = std::vector<Matrix>;
-
-	Time get_time(const std::string &value);
-	Time get_time(int32_t value);
-	Quat get_quaternion(const std::string &value);
 };
 
 #endif
