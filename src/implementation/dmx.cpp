@@ -238,16 +238,21 @@ source_engine::dmx::AttrType source_engine::dmx::get_single_type(AttrType type)
 	return AttrType::None;
 }
 
-static std::vector<source_engine::dmx::AttrType> s_v1Attributes = {source_engine::dmx::AttrType::None, source_engine::dmx::AttrType::Element, source_engine::dmx::AttrType::Int, source_engine::dmx::AttrType::Float, source_engine::dmx::AttrType::Bool, source_engine::dmx::AttrType::String, source_engine::dmx::AttrType::Binary, source_engine::dmx::AttrType::ObjectId, source_engine::dmx::AttrType::Color, source_engine::dmx::AttrType::Vector2,
-  source_engine::dmx::AttrType::Vector3, source_engine::dmx::AttrType::Vector4, source_engine::dmx::AttrType::Angle, source_engine::dmx::AttrType::Quaternion, source_engine::dmx::AttrType::Matrix, source_engine::dmx::AttrType::ElementArray, source_engine::dmx::AttrType::IntArray, source_engine::dmx::AttrType::FloatArray, source_engine::dmx::AttrType::BoolArray, source_engine::dmx::AttrType::StringArray, source_engine::dmx::AttrType::BinaryArray,
-  source_engine::dmx::AttrType::ObjectIdArray, source_engine::dmx::AttrType::ColorArray, source_engine::dmx::AttrType::Vector2Array, source_engine::dmx::AttrType::Vector3Array, source_engine::dmx::AttrType::Vector4Array, source_engine::dmx::AttrType::AngleArray, source_engine::dmx::AttrType::QuaternionArray, source_engine::dmx::AttrType::MatrixArray};
+static std::vector<source_engine::dmx::AttrType> s_v1Attributes = {source_engine::dmx::AttrType::None, source_engine::dmx::AttrType::Element, source_engine::dmx::AttrType::Int, source_engine::dmx::AttrType::Float, source_engine::dmx::AttrType::Bool, source_engine::dmx::AttrType::String,
+  source_engine::dmx::AttrType::Binary, source_engine::dmx::AttrType::ObjectId, source_engine::dmx::AttrType::Color, source_engine::dmx::AttrType::Vector2, source_engine::dmx::AttrType::Vector3, source_engine::dmx::AttrType::Vector4, source_engine::dmx::AttrType::Angle,
+  source_engine::dmx::AttrType::Quaternion, source_engine::dmx::AttrType::Matrix, source_engine::dmx::AttrType::ElementArray, source_engine::dmx::AttrType::IntArray, source_engine::dmx::AttrType::FloatArray, source_engine::dmx::AttrType::BoolArray,
+  source_engine::dmx::AttrType::StringArray, source_engine::dmx::AttrType::BinaryArray, source_engine::dmx::AttrType::ObjectIdArray, source_engine::dmx::AttrType::ColorArray, source_engine::dmx::AttrType::Vector2Array, source_engine::dmx::AttrType::Vector3Array,
+  source_engine::dmx::AttrType::Vector4Array, source_engine::dmx::AttrType::AngleArray, source_engine::dmx::AttrType::QuaternionArray, source_engine::dmx::AttrType::MatrixArray};
 
-static std::vector<source_engine::dmx::AttrType> s_v2Attributes = {source_engine::dmx::AttrType::None, source_engine::dmx::AttrType::Element, source_engine::dmx::AttrType::Int, source_engine::dmx::AttrType::Float, source_engine::dmx::AttrType::Bool, source_engine::dmx::AttrType::String, source_engine::dmx::AttrType::Binary, source_engine::dmx::AttrType::Time, source_engine::dmx::AttrType::Color, source_engine::dmx::AttrType::Vector2,
-  source_engine::dmx::AttrType::Vector3, source_engine::dmx::AttrType::Vector4, source_engine::dmx::AttrType::Angle, source_engine::dmx::AttrType::Quaternion, source_engine::dmx::AttrType::Matrix, source_engine::dmx::AttrType::ElementArray, source_engine::dmx::AttrType::IntArray, source_engine::dmx::AttrType::FloatArray, source_engine::dmx::AttrType::BoolArray, source_engine::dmx::AttrType::StringArray, source_engine::dmx::AttrType::BinaryArray,
-  source_engine::dmx::AttrType::TimeArray, source_engine::dmx::AttrType::ColorArray, source_engine::dmx::AttrType::Vector2Array, source_engine::dmx::AttrType::Vector3Array, source_engine::dmx::AttrType::Vector4Array, source_engine::dmx::AttrType::AngleArray, source_engine::dmx::AttrType::QuaternionArray, source_engine::dmx::AttrType::MatrixArray};
+static std::vector<source_engine::dmx::AttrType> s_v2Attributes = {source_engine::dmx::AttrType::None, source_engine::dmx::AttrType::Element, source_engine::dmx::AttrType::Int, source_engine::dmx::AttrType::Float, source_engine::dmx::AttrType::Bool, source_engine::dmx::AttrType::String,
+  source_engine::dmx::AttrType::Binary, source_engine::dmx::AttrType::Time, source_engine::dmx::AttrType::Color, source_engine::dmx::AttrType::Vector2, source_engine::dmx::AttrType::Vector3, source_engine::dmx::AttrType::Vector4, source_engine::dmx::AttrType::Angle,
+  source_engine::dmx::AttrType::Quaternion, source_engine::dmx::AttrType::Matrix, source_engine::dmx::AttrType::ElementArray, source_engine::dmx::AttrType::IntArray, source_engine::dmx::AttrType::FloatArray, source_engine::dmx::AttrType::BoolArray,
+  source_engine::dmx::AttrType::StringArray, source_engine::dmx::AttrType::BinaryArray, source_engine::dmx::AttrType::TimeArray, source_engine::dmx::AttrType::ColorArray, source_engine::dmx::AttrType::Vector2Array, source_engine::dmx::AttrType::Vector3Array,
+  source_engine::dmx::AttrType::Vector4Array, source_engine::dmx::AttrType::AngleArray, source_engine::dmx::AttrType::QuaternionArray, source_engine::dmx::AttrType::MatrixArray};
 
-static std::vector<source_engine::dmx::AttrType> s_v3Attributes = {source_engine::dmx::AttrType::None, source_engine::dmx::AttrType::Element, source_engine::dmx::AttrType::Int, source_engine::dmx::AttrType::Float, source_engine::dmx::AttrType::Bool, source_engine::dmx::AttrType::String, source_engine::dmx::AttrType::Binary, source_engine::dmx::AttrType::Time, source_engine::dmx::AttrType::Color, source_engine::dmx::AttrType::Vector2,
-  source_engine::dmx::AttrType::Vector3, source_engine::dmx::AttrType::Vector4, source_engine::dmx::AttrType::Angle, source_engine::dmx::AttrType::Quaternion, source_engine::dmx::AttrType::Matrix, source_engine::dmx::AttrType::UInt64, source_engine::dmx::AttrType::UInt8};
+static std::vector<source_engine::dmx::AttrType> s_v3Attributes = {source_engine::dmx::AttrType::None, source_engine::dmx::AttrType::Element, source_engine::dmx::AttrType::Int, source_engine::dmx::AttrType::Float, source_engine::dmx::AttrType::Bool, source_engine::dmx::AttrType::String,
+  source_engine::dmx::AttrType::Binary, source_engine::dmx::AttrType::Time, source_engine::dmx::AttrType::Color, source_engine::dmx::AttrType::Vector2, source_engine::dmx::AttrType::Vector3, source_engine::dmx::AttrType::Vector4, source_engine::dmx::AttrType::Angle,
+  source_engine::dmx::AttrType::Quaternion, source_engine::dmx::AttrType::Matrix, source_engine::dmx::AttrType::UInt64, source_engine::dmx::AttrType::UInt8};
 
 source_engine::dmx::AttrType source_engine::dmx::get_id_type(const std::string &encoding, uint32_t encodingVersion, uint32_t id)
 {
@@ -674,7 +679,7 @@ std::shared_ptr<source_engine::dmx::FileData> source_engine::dmx::FileData::Load
 	auto fd = std::shared_ptr<FileData>(new FileData());
 
 	auto numElements = f->Read<int32_t>();
-	fd->m_elements.reserve(numElements * 1.05);             // Reserve 5% extra for potential missing elements, which will be added to the container dynamically
+	fd->m_elements.reserve(numElements * 1.05);                            // Reserve 5% extra for potential missing elements, which will be added to the container dynamically
 	std::vector<std::shared_ptr<source_engine::dmx::Element>> elements {}; // Temporary container which owns all elements; Will be discarded once elements have been assigned to their attributes
 	elements.reserve(numElements);
 	for(auto i = decltype(numElements) {0}; i < numElements; ++i) {
