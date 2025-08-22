@@ -15,7 +15,6 @@ module;
 
 module source_engine.dmx;
 
-#pragma optimize("", off)
 namespace source_engine::dmx {
 #pragma pack(push, 1)
 	struct DmeHeader {
@@ -925,4 +924,3 @@ void source_engine::dmx::FileData::DebugPrint(std::stringstream &ss)
 	std::unordered_set<void *> iteratedObjects {};
 	m_rootAttribute->DebugPrint(ss, iteratedObjects);
 }
-#pragma optimize("", on)

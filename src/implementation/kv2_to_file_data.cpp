@@ -237,4 +237,3 @@ std::shared_ptr<source_engine::dmx::FileData> source_engine::dmx::FileData::Crea
 	fd->m_elements = data.GetElements();
 	return fd;
 }
-#pragma optimize("", on)
